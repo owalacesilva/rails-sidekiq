@@ -1,0 +1,14 @@
+<div class="container">
+  <h1>New Product</h1>
+  <% if @product.errors.any? %>
+    <div class="alert alert-danger">
+      <ul>
+        <% @product.errors.full_messages.each do |msg| %>
+          <li><%= msg %></li>
+        <% end %>
+      </ul>
+    </div>
+  <% end %>
+  <%= render 'partials/form' %>
+  <%= link_to 'Back', products_path, class: 'btn btn-default' %>
+</div>
