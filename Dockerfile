@@ -4,11 +4,15 @@
 ARG RUBY_VERSION=3.2.2
 FROM registry.docker.com/library/ruby:$RUBY_VERSION-slim as base
 
+LABEL version="1.0"
+LABEL author="Walace Silva"
+LABEL email="wsilva.emp@gmail.com"
+
 # Rails app lives here
-WORKDIR /rails
+WORKDIR /workspace
 
 # Set production environment
-ENV RAILS_ENV="production" \
+ENV RAILS_ENV="development" \
     BUNDLE_DEPLOYMENT="1" \
     BUNDLE_PATH="/usr/local/bundle" \
     BUNDLE_WITHOUT="development"
@@ -19,7 +23,16 @@ FROM base as build
 
 # Install packages needed to build gems
 RUN apt-get update -qq && \
-    apt-get install --no-install-recommends -y build-essential git libvips pkg-config
+    apt-get install --no-install-recommends -y build-essential libvips pkg-config curl
+
+#RUN curl -sL https://deb.nodesource.com/setup_$NODE_VERSION.x -o | bash - && \
+    #curl -sS https://dl.yarnpkg.com/debian/pubkey.gpg | apt-key add - && \
+    #echo "deb https://dl.yarnpkg.com/debian/ stable main" | tee /etc/apt/sources.list.d/yarn.list
+
+# Set up locale
+# RUN echo "en_US.UTF-8 UTF-8" > /etc/locale.gen && \
+#    locale-gen && \
+#    export LC_ALL="en_US.utf8"
 
 # Install application gems
 COPY Gemfile Gemfile.lock ./
@@ -59,4 +72,4 @@ ENTRYPOINT ["/rails/bin/docker-entrypoint"]
 
 # Start the server by default, this can be overwritten at runtime
 EXPOSE 3000
-CMD ["./bin/rails", "server"]
+CMD ["./bin/rails", "server", "-b 0.0.0.0"]
