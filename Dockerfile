@@ -25,9 +25,9 @@ FROM base as build
 RUN apt-get update -qq && \
     apt-get install --no-install-recommends -y build-essential libvips pkg-config curl
 
-#RUN curl -sL https://deb.nodesource.com/setup_$NODE_VERSION.x -o | bash - && \
-    #curl -sS https://dl.yarnpkg.com/debian/pubkey.gpg | apt-key add - && \
-    #echo "deb https://dl.yarnpkg.com/debian/ stable main" | tee /etc/apt/sources.list.d/yarn.list
+RUN curl -sL https://deb.nodesource.com/setup_$NODE_VERSION.x | bash - && \
+    curl -sS https://dl.yarnpkg.com/debian/pubkey.gpg | apt-key add - && \
+    echo "deb https://dl.yarnpkg.com/debian/ stable main" | tee /etc/apt/sources.list.d/yarn.list
 
 # Set up locale
 # RUN echo "en_US.UTF-8 UTF-8" > /etc/locale.gen && \
@@ -55,7 +55,7 @@ FROM base
 
 # Install packages needed for deployment
 RUN apt-get update -qq && \
-    apt-get install --no-install-recommends -y curl libpg-dev libvips && \
+    apt-get install --no-install-recommends -y curl libpg-dev libvips nodejs && \
     rm -rf /var/lib/apt/lists /var/cache/apt/archives
 
 # Copy built artifacts: gems, application
